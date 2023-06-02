@@ -24,8 +24,11 @@ export class Category {
   @OneToMany(() => Todo, (todo) => todo.category)
   todos: Todo[];
 
-  @ApiProperty({ example: "1", description: 'Category id' })
-  @ManyToOne(() => User, (user) => user.categories, {nullable: false, onDelete: 'CASCADE'})
-  @JoinColumn({name: 'userId'})
+  @ApiProperty({ example: '1', description: 'Category id' })
+  @ManyToOne(() => User, (user) => user.categories, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'userId' })
   user: User;
 }

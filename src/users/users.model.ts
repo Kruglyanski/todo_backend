@@ -3,10 +3,16 @@ import { ApiProperty } from '@nestjs/swagger';
 //import { Role } from '../roles/roles.model';
 //import { UserRoles } from '../roles/user-roles.model';
 import { Todo } from '../todos/todos.model';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Category } from '../categories/categories.model';
 import { Role } from '../roles/roles.model';
-
 
 @Entity()
 export class User {
@@ -19,7 +25,7 @@ export class User {
   email: string;
 
   @ApiProperty({ example: '1234', description: 'Password' })
-  @Column({ nullable: false})
+  @Column({ nullable: false })
   password: string;
 
   // @ApiProperty({ example: '1', description: 'Role Id' })
@@ -29,11 +35,11 @@ export class User {
   // @BelongsToMany(() => Role, () => UserRoles)
   // roles: Role[];
 
-  @ApiProperty({ example: Todo, description: 'Array of categories' })
+  @ApiProperty({ example: Category, description: 'Array of categories' })
   @OneToMany(() => Category, (category) => category.user)
   categories: Category[];
 
-  @ManyToMany(() => Role, role => role.users)
+  @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({ name: 'user_role' })
-  roles: Role[];;
+  roles: Role[];
 }

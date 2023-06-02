@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
- import { User } from './users/users.model';
- import { RolesModule } from './roles/roles.module';
- import { Role } from './roles/roles.model';
+import { User } from './users/users.model';
+import { RolesModule } from './roles/roles.module';
+import { Role } from './roles/roles.model';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './categories/categories.module';
@@ -11,16 +11,15 @@ import { Category } from './categories/categories.model';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './todos/todos.model';
 import { TodosModule } from './todos/todos.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
-  controllers: [
-    AuthController
-  ],
-  providers: [],
+  controllers: [AuthController],
+  providers: [JwtAuthGuard],
   imports: [
     ConfigModule.forRoot({
       //envFilePath: `.${process.env.NODE_ENV}.env`,
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -33,18 +32,13 @@ import { TodosModule } from './todos/todos.module';
         database: configService.get('POSTGRES_DB'),
         synchronize: true,
         autoLoadEntities: true,
-        entities: [
-          User,
-          Role,
-          Todo,
-          Category,
-        ],
+        entities: [User, Role, Todo, Category],
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
-     UsersModule,
-     RolesModule,
-     AuthModule,
+    UsersModule,
+    RolesModule,
+    AuthModule,
     TodosModule,
     CategoryModule,
   ],
