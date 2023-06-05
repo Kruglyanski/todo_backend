@@ -18,8 +18,8 @@ async function start() {
   SwaggerModule.setup('/api/swagger', app, document);
 
   const authGuard = app.select(AuthModule).get(JwtAuthGuard);
-  app.useGlobalGuards(authGuard);
-
+  //app.useGlobalGuards(authGuard);
+  app.enableCors();
   await app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 }
 

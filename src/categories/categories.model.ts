@@ -26,7 +26,7 @@ export class Category {
 
   @ApiProperty({ example: '1', description: 'Category id' })
   @ManyToOne(() => User, (user) => user.categories, {
-    nullable: false,
+    //nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })

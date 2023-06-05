@@ -3,16 +3,23 @@ import { CreateTodoDto } from './dto/create-todo.dto';
 import { Todo } from './todos.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Category } from '../categories/categories.model';
 
 @Injectable()
 export class TodosService {
-   constructor(
-    @InjectRepository(Todo) 
+  constructor(
+    @InjectRepository(Todo)
     private todosRepository: Repository<Todo>,
-    ) {}
+    @InjectRepository(Category)
+    private categoriesRepository: Repository<Category>,
+  ) {}
 
   async createTodo(todoDto: CreateTodoDto) {
-    const todo = await this.todosRepository.save(todoDto);
+    const category = await this.categoriesRepository.findOne({
+      where: { id: todoDto.categoryId },
+    });
+    const todo = await this.todosRepository.save({ ...todoDto, category });
+
     return todo;
   }
 
