@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { Todo } from './todos.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Category } from '../categories/categories.model';
 
 @Injectable()
@@ -41,5 +41,9 @@ export class TodosService {
   async deleteTodo(id: number) {
     const todo = await this.todosRepository.delete(id);
     return todo;
+  }
+
+  async deleteTodosByIds(ids: number[]) {
+    await this.todosRepository.delete({ id: In(ids) });
   }
 }

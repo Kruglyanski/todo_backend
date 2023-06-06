@@ -48,8 +48,14 @@ export class TodosController {
 
   // @ApiOperation({ summary: 'Delete Todo' })
   // @ApiResponse({ status: 200 })
-  @Delete('/:todoId')
-  delete(@Param('todoId') todoId: number) {
-    return this.todosService.deleteTodo(todoId);
+  // @Delete('/:todoId')
+  // delete(@Param('todoId') todoId: number) {
+  //    return this.todosService.deleteTodo(todoId);
+     
+  // }
+  @Delete('/:todoIds')
+  delete(@Param('todoIds') todoIds: string) {
+     return this.todosService.deleteTodosByIds(todoIds.split(",").map(Number));
+     
   }
 }
