@@ -9,6 +9,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/users.model';
+import { CreateUserInput } from '../users/inputs/create-user.input';
 
 @Injectable()
 export class AuthService {
@@ -17,12 +18,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(userDto: CreateUserDto) {
+  async login(userDto: CreateUserDto | CreateUserInput) {
     const user = await this.validateUser(userDto);
     return this.generateToken(user);
   }
 
-  async registration(userDto: CreateUserDto) {
+  async registration(userDto: CreateUserDto | CreateUserInput) {
     const candidate = await this.userService.getUserByEmail(userDto.email);
 
     if (candidate) {
@@ -48,7 +49,7 @@ export class AuthService {
     };
   }
 
-  private async validateUser(userDto: CreateUserDto) {
+  private async validateUser(userDto: CreateUserDto | CreateUserInput) {
     const user = await this.userService.getUserByEmail(userDto.email);
     let passwordEquals = false;
     if (user) {
@@ -60,5 +61,18 @@ export class AuthService {
     throw new UnauthorizedException({
       message: 'Incorrect email or password!!!',
     });
+  }
+
+  async getUserIdFromAuthHeader(authHeader: string) {
+    try {
+      const token = authHeader.split(' ')?.[1];
+      const payload = this.jwtService.verify(token);
+      return payload.id;
+    } catch (error) {
+      throw new UnauthorizedException({
+        message: 'Something went wrong',
+        error,
+      });
+    }
   }
 }

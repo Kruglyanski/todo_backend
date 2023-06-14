@@ -17,10 +17,10 @@ export class UsersController {
     return this.userService.createUser(userDto);
   }
 
-  @ApiOperation({ summary: 'Get All Users' })
-  @ApiResponse({ status: 200, type: [User] })
-  @Get()
-  getAll() {
-    return this.userService.getAllUsers();
-  }
+  // @ApiOperation({ summary: 'Get All Users' })
+  // @ApiResponse({ status: 200, type: [User] })
+  // @Get()
+  // getAll() {
+  //   return this.userService.getAllUsers();
+  // }
 }

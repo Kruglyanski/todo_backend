@@ -12,14 +12,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './todos/todos.model';
 import { TodosModule } from './todos/todos.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TodosResolver } from './todos/todos.resolver';
+import { join } from 'path';
+import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
+import { CategoriesResolver } from './categories/categories.resolver';
+import { AuthResolver } from './auth/auth.resolver';
 
 @Module({
   controllers: [AuthController],
-  providers: [JwtAuthGuard],
+  providers: [JwtAuthGuard, TodosResolver, CategoriesResolver, AuthResolver],
   imports: [
     ConfigModule.forRoot({
       //envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
+    }),
+    GraphQLModule.forRoot<YogaDriverConfig>({
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      driver: YogaDriver,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

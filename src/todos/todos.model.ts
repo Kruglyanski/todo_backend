@@ -7,45 +7,66 @@ import {
 } from 'typeorm';
 import { Category } from '../categories/categories.model';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-
-@Entity()
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+@ObjectType()
+@Entity('todos')
 export class Todo {
   @ApiProperty({ example: 1, description: 'Identificator' })
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({ example: 'Title', description: 'Title' })
-  @Column()
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+  })
   title: string;
 
   @ApiProperty({ example: 'Description', description: 'Description' })
-  @Column()
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+  })
   description: string;
 
   @ApiProperty({ example: 'HIGH', description: 'Tag' })
+  @Field({
+    nullable: true,
+  })
   @Column({
     nullable: true,
   })
   tag: string;
 
-  @ApiProperty({ example: 'false', description: 'Is Todo Complelted' })
+  @ApiProperty({ example: 'false', description: 'Is Todo Completed' })
+  @Field({
+    nullable: true,
+  })
   @Column({
     nullable: true,
   })
   completed: boolean;
 
-  // @ForeignKey(() => User)
-  // @Column({ type: DataType.INTEGER })
-  // userId: number;
-  @ApiProperty({ example: '1', description: 'Category id' })
+  @ApiProperty({ example: 1, description: 'CategoryId' })
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+  })
+  categoryId: number;
+
+  @ApiProperty({ example: 'Category', description: 'Category' })
   @ManyToOne(() => Category, (category) => category.todos, {
-    nullable: false,
     onDelete: 'CASCADE',
     eager: true,
+    nullable: true,
   })
   @JoinColumn({ name: 'categoryId' })
   category: Category;
-
-  // @BelongsTo(() => User)
-  // appointedUser: User;
 }

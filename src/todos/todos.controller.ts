@@ -1,13 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import {
-  ApiOperation,
-  ApiPropertyOptional,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Todo } from './todos.model';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @ApiTags('Todos')
 @Controller('todos')
@@ -16,46 +21,28 @@ export class TodosController {
 
   @Post()
   @ApiOperation({ summary: 'Todo Creating' })
-  @ApiPropertyOptional({
-    type: Todo,
-    isArray: false,
-    description: 'Todo Creation',
-  })
+  @ApiResponse({ status: 200, type: () => [Todo] })
   create(@Body() todoDto: CreateTodoDto) {
     return this.todosService.createTodo(todoDto);
   }
 
-  // @ApiOperation({ summary: 'Get All Todos' })
-  // @ApiResponse({ status: 200, type: () => [Todo] })
+  @ApiOperation({ summary: 'Get All Todos' })
+  @ApiResponse({ status: 200, type: () => [Todo] })
   @Get()
   getAll() {
     return this.todosService.getAllTodos();
   }
 
-  // @ApiOperation({ summary: 'Get Todo By Tag' })
-  // @ApiResponse({ status: 200, type: () => Todo })
-  @Get('/tag/:tag')
-  getByTag(@Param('tag') tag: string) {
-    return this.todosService.getTodosByTag(tag);
-  }
-
-  // @ApiOperation({ summary: 'Get Todo By User Id' })
-  // @ApiResponse({ status: 200, type:() => Todo })
-  @Get('user/:userId')
-  getByUser(@Param('userId') userId: number) {
-    return this.todosService.getTodosByUser(userId);
-  }
-
-  // @ApiOperation({ summary: 'Delete Todo' })
-  // @ApiResponse({ status: 200 })
-  // @Delete('/:todoId')
-  // delete(@Param('todoId') todoId: number) {
-  //    return this.todosService.deleteTodo(todoId);
-     
-  // }
   @Delete('/:todoIds')
   delete(@Param('todoIds') todoIds: string) {
-     return this.todosService.deleteTodosByIds(todoIds.split(",").map(Number));
-     
+    return this.todosService.deleteTodosByIds(todoIds.split(',').map(Number));
+  }
+
+  @Patch('update/:todoId')
+  update(
+    @Param('todoId') todoId: number,
+    @Body() updateTodoDto: UpdateTodoDto,
+  ) {
+    return this.todosService.updateTodoFields(todoId, updateTodoDto);
   }
 }

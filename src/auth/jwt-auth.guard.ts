@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from './decorators/allow-unautharized';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -25,7 +26,8 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    //const request = context.switchToHttp().getRequest();
+    const request = GqlExecutionContext.create(context).getContext().req;
 
     try {
       const authHeader = request.headers.authorization;

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from '../roles/roles.model';
+import { CreateUserInput } from './inputs/create-user.input';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,7 @@ export class UsersService {
     private rolesRepository: Repository<Role>,
   ) {}
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreateUserDto | CreateUserInput) {
     const { password, email, roleIds } = dto;
     const roles =
       roleIds &&
@@ -24,12 +25,12 @@ export class UsersService {
     return user;
   }
 
-  async getAllUsers() {
-    const users = await this.usersRepository.find({
-      relations: ['categories', 'roles'],
-    });
-    return users;
-  }
+  // async getAllUsers() {
+  //   const users = await this.usersRepository.find({
+  //     relations: ['categories', 'roles'],
+  //   });
+  //   return users;
+  // }
 
   async getUserByEmail(email: string) {
     const user = this.usersRepository.findOne({

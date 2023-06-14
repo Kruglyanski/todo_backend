@@ -13,18 +13,22 @@ import {
 } from 'typeorm';
 import { Category } from '../categories/categories.model';
 import { Role } from '../roles/roles.model';
-
+import { Field, ObjectType } from '@nestjs/graphql';
+@ObjectType()
 @Entity()
 export class User {
   @ApiProperty({ example: 1, description: 'Identificator' })
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({ example: 'user@user.com', description: 'Email' })
+  @Field()
   @Column({ nullable: false })
   email: string;
 
   @ApiProperty({ example: '1234', description: 'Password' })
+  @Field()
   @Column({ nullable: false })
   password: string;
 

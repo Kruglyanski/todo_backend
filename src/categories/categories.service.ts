@@ -4,6 +4,12 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/users.model';
+import { CreateCategoryInput } from './inputs/create-category.input';
+
+interface ICreateCategory
+  extends Pick<CreateCategoryInput | CreateCategoryDto, 'title'> {
+  userId: number;
+}
 
 @Injectable()
 export class CategoryService {
@@ -14,7 +20,7 @@ export class CategoryService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async createCategory(categoryDto: CreateCategoryDto) {
+  async createCategory(categoryDto: ICreateCategory) {
     const categoryExist = await this.categoriesRepository.findOne({
       where: { title: categoryDto.title },
     });
@@ -28,23 +34,37 @@ export class CategoryService {
     });
     const category = await this.categoriesRepository.save({
       ...categoryDto,
+      todos: [],
       user,
     });
 
     return category;
   }
 
-  async getAllCategories() {
+  async getAllCategories(userId: number) {
     const categories = await this.categoriesRepository.find({
+      where: { user: { id: userId } },
       relations: ['todos', 'user'],
     });
 
     return categories;
   }
 
-  async deleteCategory(id: number) {
-    const category = await this.categoriesRepository.delete(id);
+  async deleteCategory(categoryId: number) {
+    const deletedCategory = await this.categoriesRepository
+      .createQueryBuilder()
+      .delete()
+      .where('id = :id', { id: categoryId })
+      .returning('*')
+      .execute()
+      .then((result) => result.raw[0]);
 
-    return category;
+    if (!deletedCategory) {
+      throw new Error(
+        `Error when attempt to delete category with id: ${categoryId}.`,
+      );
+    }
+
+    return deletedCategory;
   }
 }
