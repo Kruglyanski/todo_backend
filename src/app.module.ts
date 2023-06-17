@@ -18,17 +18,11 @@ import { join } from 'path';
 import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
 import { CategoriesResolver } from './categories/categories.resolver';
 import { AuthResolver } from './auth/auth.resolver';
-import { AppGateway } from './app.gateway';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    JwtAuthGuard,
-    TodosResolver,
-    CategoriesResolver,
-    AuthResolver,
-    AppGateway,
-  ],
+  providers: [JwtAuthGuard, TodosResolver, CategoriesResolver, AuthResolver],
   imports: [
     ConfigModule.forRoot({
       //envFilePath: `.${process.env.NODE_ENV}.env`,
@@ -59,6 +53,7 @@ import { AppGateway } from './app.gateway';
     AuthModule,
     TodosModule,
     CategoryModule,
+    GatewayModule,
   ],
 })
 export class AppModule {}

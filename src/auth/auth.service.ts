@@ -65,15 +65,9 @@ export class AuthService {
   }
 
   public async getUserFromAuthHeader(authHeader: string): Promise<User> {
-    try {
-      const token = authHeader.split(' ')?.[1];
-      const payload = await this.jwtService.verify(token);
-      return payload;
-    } catch (error) {
-      throw new UnauthorizedException({
-        message: 'Something went wrong',
-        error,
-      });
-    }
+    const token = authHeader.split(' ')?.[1];
+    const payload = this.jwtService.verify(token);
+
+    return payload;
   }
 }
