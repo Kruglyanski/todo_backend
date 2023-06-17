@@ -21,15 +21,18 @@ export class CategoriesResolver {
   constructor(
     private categoriesService: CategoryService,
     private authService: AuthService,
-    private todoService: TodosService,
   ) {}
 
   @Query(() => [Category])
   async categories(@Context() context): Promise<Category[]> {
-    const userId = await this.authService.getUserIdFromAuthHeader(
+    console.log(
+      'context.req.headers.authorization',
       context.req.headers.authorization,
     );
-    return this.categoriesService.getAllCategories(userId);
+    const user = await this.authService.getUserFromAuthHeader(
+      context.req.headers.authorization,
+    );
+    return this.categoriesService.getAllCategories(user.id);
   }
 
   @ResolveField(() => [Todo])
@@ -42,13 +45,13 @@ export class CategoriesResolver {
     @Args('categoryInput') categoryInput: CreateCategoryInput,
     @Context() context,
   ): Promise<Category> {
-    const userId = await this.authService.getUserIdFromAuthHeader(
+    const user = await this.authService.getUserFromAuthHeader(
       context.req.headers.authorization,
     );
 
     return this.categoriesService.createCategory({
       ...categoryInput,
-      userId,
+      userId: user.id,
     });
   }
 

@@ -18,12 +18,13 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(userDto: CreateUserDto | CreateUserInput) {
+  public async login(userDto: CreateUserDto | CreateUserInput) {
     const user = await this.validateUser(userDto);
-    return this.generateToken(user);
+
+    return await this.generateToken(user);
   }
 
-  async registration(userDto: CreateUserDto | CreateUserInput) {
+  public async registration(userDto: CreateUserDto | CreateUserInput) {
     const candidate = await this.userService.getUserByEmail(userDto.email);
 
     if (candidate) {
@@ -63,11 +64,11 @@ export class AuthService {
     });
   }
 
-  async getUserIdFromAuthHeader(authHeader: string) {
+  public async getUserFromAuthHeader(authHeader: string): Promise<User> {
     try {
       const token = authHeader.split(' ')?.[1];
-      const payload = this.jwtService.verify(token);
-      return payload.id;
+      const payload = await this.jwtService.verify(token);
+      return payload;
     } catch (error) {
       throw new UnauthorizedException({
         message: 'Something went wrong',

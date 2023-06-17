@@ -15,7 +15,7 @@ export class UsersService {
     private rolesRepository: Repository<Role>,
   ) {}
 
-  async createUser(dto: CreateUserDto | CreateUserInput) {
+  public async createUser(dto: CreateUserDto | CreateUserInput) {
     const { password, email, roleIds } = dto;
     const roles =
       roleIds &&
@@ -32,7 +32,7 @@ export class UsersService {
   //   return users;
   // }
 
-  async getUserByEmail(email: string) {
+  public async getUserByEmail(email: string) {
     const user = this.usersRepository.findOne({
       where: { email },
     });

@@ -23,15 +23,18 @@ export class CategoryController {
     @Body() categoryDto: CreateCategoryDto,
     @Headers('authorization') authHeader: string,
   ) {
-    const userId = await this.authService.getUserIdFromAuthHeader(authHeader);
+    const user = await this.authService.getUserFromAuthHeader(authHeader);
 
-    return this.categoryService.createCategory({ ...categoryDto, userId });
+    return this.categoryService.createCategory({
+      ...categoryDto,
+      userId: user.id,
+    });
   }
 
   @Get()
   async getAll(@Headers('authorization') authHeader: string) {
-    const userId = await this.authService.getUserIdFromAuthHeader(authHeader);
-    return this.categoryService.getAllCategories(userId);
+    const user = await this.authService.getUserFromAuthHeader(authHeader);
+    return this.categoryService.getAllCategories(user.id);
   }
 
   @Delete('/:categoryId')

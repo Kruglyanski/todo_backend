@@ -37,7 +37,7 @@ export class CategoryService {
       todos: [],
       user,
     });
-
+    //this.appGateway.handleEmit( 'todoEvent', {userEmail: user.email, title: category.title, type: IUserEvents.CREATE_CATEGORY})
     return category;
   }
 
@@ -51,7 +51,7 @@ export class CategoryService {
   }
 
   async deleteCategory(categoryId: number) {
-    const deletedCategory = await this.categoriesRepository
+    const deletedCategory: Category = await this.categoriesRepository
       .createQueryBuilder()
       .delete()
       .where('id = :id', { id: categoryId })
@@ -64,7 +64,7 @@ export class CategoryService {
         `Error when attempt to delete category with id: ${categoryId}.`,
       );
     }
-
+    // this.chatService.handleEmitMessage( 'todoEvent', {userEmail: deletedCategory.user.email , title: deletedCategory.title, type: IUserEvents.DELETE_CATEGORY})
     return deletedCategory;
   }
 }
