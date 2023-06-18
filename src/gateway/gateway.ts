@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -10,16 +10,19 @@ import {
 import { Server, Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
 import { IIncomingData } from '../interfaces/events';
-
+@Injectable()
 @WebSocketGateway({ cors: true })
 export class Gateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   private logger: Logger = new Logger('AppGateway');
-  constructor(private authService: AuthService) {}
 
-  @WebSocketServer()
-  private server: Server;
+  constructor(private authService: AuthService) {
+    console.log('Gateway');
+  }
+
+  // @WebSocketServer()
+  // private server: Server;
 
   afterInit(server: Server) {
     this.logger.log('AppGateway INIT.');
@@ -37,31 +40,63 @@ export class Gateway
     console.log('handleDisconnect', client.id);
   }
 
-  handleEmit(event: any, data: any) {
-    console.log('!!!!!!!!!!!!handleEmit', data);
-    // this.server.emit(event, data)
-  }
-
-  @SubscribeMessage('message')
-  async handleMessage(client: Socket, incomingData: IIncomingData) {
+  // handleEmit(event: any, data: any) {
+  //   console.log('!!!!!!!!!!!!handleEmit', data);
+  //   this.server.emit(event, data)
+  // }
+  //<E extends keyof IIncomingData>
+  
+  @SubscribeMessage('chatMessage')
+  async handleChatMessage(
+    client: Socket,
+    incomingData: IIncomingData<'chatMessage'>,
+  ) {
     const token = client.handshake.auth.token;
     const user = await this.authService.getUserFromAuthHeader(token);
+    client.broadcast.emit('chatMessage', {
+      message: incomingData,
+      userEmail: user.email,
+    });
 
-    if (incomingData.action === 'chatMessage') {
-      client.broadcast.emit('chatMessage', {
-        message: incomingData.data,
-        userEmail: user.email,
-      });
-      return {
-        event: 'chatMessage',
-        data: { message: incomingData.data, userEmail: user.email },
-      };
-    } else if (incomingData.action === 'anotherMessage') {
-      client.broadcast.emit('anotherMessage', incomingData.data);
-      return {
-        event: 'anotherMessage',
-        data: { message: 'test', userEmail: user.email },
-      };
-    }
+    return {
+      event: 'chatMessage',
+      data: { message: incomingData, userEmail: user.email },
+    };
+  }
+
+  @SubscribeMessage('userSign')
+  async handleUserSign(
+    client: Socket,
+    incomingData: IIncomingData<'userSign'>,
+  ) {
+    const token = client.handshake.auth.token;
+    const user = await this.authService.getUserFromAuthHeader(token);
+    client.broadcast.emit('userSign', {
+      value: incomingData.value,
+      userEmail: user.email,
+    });
+
+    return {
+      event: 'userSign',
+      data: { value: incomingData.value, userEmail: user.email },
+    };
+  }
+
+  @SubscribeMessage('userEvent')
+  async handleUserEvent(
+    client: Socket,
+    incomingData: IIncomingData<'userEvent'>,
+  ) {
+    const token = client.handshake.auth.token;
+    const user = await this.authService.getUserFromAuthHeader(token);
+    client.broadcast.emit('userEvent', {
+      ...incomingData,
+      userEmail: user.email,
+    });
+
+    return {
+      event: 'userEvent',
+      data: {  ...incomingData, userEmail: user.email },
+    };
   }
 }

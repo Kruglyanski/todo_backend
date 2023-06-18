@@ -1,9 +1,9 @@
+import { EUserEvents } from "../enums/user-events";
+
 export interface IOnEvents {
-  chatMessage: { message: string; userEmail: string };
-  anotherMessage: { text: string; foo: any };
+  chatMessage: { message: string };
+  userSign: { value: 'in' | 'out'};
+  userEvent: { userEvent: EUserEvents, entityTitle: string};
 }
 
-export interface IIncomingData {
-  action: keyof IOnEvents;
-  data: IOnEvents[keyof IOnEvents];
-}
+export type IIncomingData<T extends keyof IOnEvents> = IOnEvents[T];
