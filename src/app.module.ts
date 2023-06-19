@@ -19,6 +19,9 @@ import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
 import { CategoriesResolver } from './categories/categories.resolver';
 import { AuthResolver } from './auth/auth.resolver';
 import { GatewayModule } from './gateway/gateway.module';
+import { ChatModule } from './chat/chat.module';
+import { MessagesModule } from './messages/messages.module';
+import { Message } from './messages/messages.model';
 
 @Module({
   controllers: [AuthController],
@@ -44,7 +47,7 @@ import { GatewayModule } from './gateway/gateway.module';
         database: configService.get('POSTGRES_DB'),
         synchronize: true,
         autoLoadEntities: true,
-        entities: [User, Role, Todo, Category],
+        entities: [User, Role, Todo, Category, Message],
       }),
       inject: [ConfigService],
     }),
@@ -53,7 +56,9 @@ import { GatewayModule } from './gateway/gateway.module';
     AuthModule,
     TodosModule,
     CategoryModule,
+    ChatModule,
     GatewayModule,
+    MessagesModule,
   ],
 })
 export class AppModule {}

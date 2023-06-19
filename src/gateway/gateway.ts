@@ -10,6 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
 import { IIncomingData } from '../interfaces/events';
+import { MessagesService } from '../messages/messages.service';
 @Injectable()
 @WebSocketGateway({ cors: true })
 export class Gateway
@@ -17,20 +18,23 @@ export class Gateway
 {
   private logger: Logger = new Logger('AppGateway');
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private messageService: MessagesService,
+  ) {
     console.log('Gateway');
   }
 
   // @WebSocketServer()
   // private server: Server;
-
   afterInit(server: Server) {
     this.logger.log('AppGateway INIT.');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
-    client.emit('clientConnected', { data: 'DATA CONNECTED' });
-    this.logger.log('handleConnection');
+  async handleConnection(client: Socket, ...args: any[]) {
+    const messages = await this.messageService.getAllMessages();
+    client.emit('clientConnected', { data: messages });
+    console.log('handleConnection');
     client.on('disconnecting', async () => {
       console.log('handleConnection client.on disconnecting');
     });
@@ -44,8 +48,7 @@ export class Gateway
   //   console.log('!!!!!!!!!!!!handleEmit', data);
   //   this.server.emit(event, data)
   // }
-  //<E extends keyof IIncomingData>
-  
+
   @SubscribeMessage('chatMessage')
   async handleChatMessage(
     client: Socket,
@@ -53,10 +56,12 @@ export class Gateway
   ) {
     const token = client.handshake.auth.token;
     const user = await this.authService.getUserFromAuthHeader(token);
-    client.broadcast.emit('chatMessage', {
+    const data = {
       message: incomingData,
       userEmail: user.email,
-    });
+    };
+    this.messageService.save(data);
+    client.broadcast.emit('chatMessage', data);
 
     return {
       event: 'chatMessage',
@@ -96,7 +101,7 @@ export class Gateway
 
     return {
       event: 'userEvent',
-      data: {  ...incomingData, userEmail: user.email },
+      data: { ...incomingData, userEmail: user.email },
     };
   }
 }
