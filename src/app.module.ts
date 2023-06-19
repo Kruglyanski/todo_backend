@@ -19,7 +19,6 @@ import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
 import { CategoriesResolver } from './categories/categories.resolver';
 import { AuthResolver } from './auth/auth.resolver';
 import { GatewayModule } from './gateway/gateway.module';
-import { ChatModule } from './chat/chat.module';
 import { MessagesModule } from './messages/messages.module';
 import { Message } from './messages/messages.model';
 
@@ -56,7 +55,6 @@ import { Message } from './messages/messages.model';
     AuthModule,
     TodosModule,
     CategoryModule,
-    ChatModule,
     GatewayModule,
     MessagesModule,
   ],

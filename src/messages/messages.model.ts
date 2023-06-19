@@ -26,6 +26,9 @@ export class Message {
   message: string;
   @Column()
   //   @Field()
+  type: string;
+  @Column()
+  //   @Field()
   userEmail: string;
 
   //   @ApiProperty({ example: User, description: 'User' })

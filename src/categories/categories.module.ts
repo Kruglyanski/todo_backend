@@ -12,7 +12,11 @@ import { TodosModule } from '../todos/todos.module';
 import { TodosService } from '../todos/todos.service';
 
 @Module({
-  providers: [CategoryService, CategoriesResolver, TodosService],
+  providers: [
+    CategoryService,
+    CategoriesResolver,
+    TodosService,
+  ],
   controllers: [CategoryController],
   imports: [
     TypeOrmModule.forFeature([Category, Todo, User]),
