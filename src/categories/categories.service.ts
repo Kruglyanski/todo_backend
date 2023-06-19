@@ -18,8 +18,7 @@ export class CategoryService {
     private categoriesRepository: Repository<Category>,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) 
-  {}
+  ) {}
 
   async createCategory(categoryDto: ICreateCategory) {
     const categoryExist = await this.categoriesRepository.findOne({

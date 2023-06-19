@@ -1,4 +1,4 @@
-import {  Logger, UnauthorizedException } from '@nestjs/common';
+import { Logger, UnauthorizedException } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -11,10 +11,10 @@ import { Server, Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
 import { IIncomingData } from '../interfaces/events';
 import { MessagesService } from '../messages/messages.service';
+import { Message } from '../messages/messages.model';
 
 @WebSocketGateway({ cors: true })
-export class Gateway
-{
+export class Gateway {
   private logger: Logger = new Logger('AppGateway');
 
   constructor(
@@ -23,9 +23,9 @@ export class Gateway
   ) {}
 
   async handleConnection(client: Socket, ...args: any[]) {
-      const messages = await this.messageService.getAllMessages();
-      client.emit('clientConnected', messages);
-      console.log('clientConnected');
+    const messages = await this.messageService.getAllMessages();
+    client.emit('clientConnected', messages);
+    console.log('clientConnected');
   }
 
   handleDisconnect(client: Socket) {
@@ -39,25 +39,28 @@ export class Gateway
   ) {
     const token = client.handshake.auth.token;
     const user = await this.authService.getUserFromAuthHeader(token);
-    const data = await this.messageService.save({...incomingData, userEmail: user.email});
+    const data = await this.messageService.save({
+      ...incomingData,
+      userEmail: user.email,
+    });
 
     client.broadcast.emit('chatMessage', data);
 
     return {
       event: 'chatMessage',
-      data
+      data,
     };
   }
 
   @SubscribeMessage('deleteMessage')
-  async handleDeleteMassage(
+  async handleDeleteMessage(
     client: Socket,
     msgId: IIncomingData<'deleteMessage'>,
   ) {
     const token = client.handshake.auth.token;
     const user = await this.authService.getUserFromAuthHeader(token);
-    
-    if(!user){
+
+    if (!user) {
       throw new UnauthorizedException({
         message: 'Incorrect user authorization!!!',
       });
@@ -68,6 +71,25 @@ export class Gateway
     return {
       event: 'deleteMessage',
       data: deletedMessage.id,
+    };
+  }
+
+  @SubscribeMessage('editMessage')
+  async handleEditMessage(client: Socket, msg: IIncomingData<'editMessage'>) {
+    const token = client.handshake.auth.token;
+    const user = await this.authService.getUserFromAuthHeader(token);
+
+    if (!user) {
+      throw new UnauthorizedException({
+        message: 'Incorrect user authorization!!!',
+      });
+    }
+
+    const { id, message } = await this.messageService.update(msg);
+    client.broadcast.emit('editMessage', { id, message });
+    return {
+      event: 'editMessage',
+      data: { id, message },
     };
   }
 }
