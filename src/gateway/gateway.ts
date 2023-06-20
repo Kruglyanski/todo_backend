@@ -1,17 +1,9 @@
 import { Logger, UnauthorizedException } from '@nestjs/common';
-import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
 import { AuthService } from '../auth/auth.service';
 import { IIncomingData } from '../interfaces/events';
 import { MessagesService } from '../messages/messages.service';
-import { Message } from '../messages/messages.model';
 
 @WebSocketGateway({ cors: true })
 export class Gateway {
@@ -22,7 +14,7 @@ export class Gateway {
     private messageService: MessagesService,
   ) {}
 
-  async handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket) {
     const messages = await this.messageService.getAllMessages();
     client.emit('clientConnected', messages);
     console.log('clientConnected');

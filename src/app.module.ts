@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './users/users.model';
+import { User } from './users/users.entity';
 import { RolesModule } from './roles/roles.module';
-import { Role } from './roles/roles.model';
+import { Role } from './roles/roles.entity';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './categories/categories.module';
-import { Category } from './categories/categories.model';
+import { Category } from './categories/categories.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Todo } from './todos/todos.model';
+import { Todo } from './todos/todos.entity';
 import { TodosModule } from './todos/todos.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -20,14 +20,13 @@ import { CategoriesResolver } from './categories/categories.resolver';
 import { AuthResolver } from './auth/auth.resolver';
 import { GatewayModule } from './gateway/gateway.module';
 import { MessagesModule } from './messages/messages.module';
-import { Message } from './messages/messages.model';
+import { Message } from './messages/messages.entity';
 
 @Module({
   controllers: [AuthController],
   providers: [JwtAuthGuard, TodosResolver, CategoriesResolver, AuthResolver],
   imports: [
     ConfigModule.forRoot({
-      //envFilePath: `.${process.env.NODE_ENV}.env`,
       isGlobal: true,
     }),
     GraphQLModule.forRoot<YogaDriverConfig>({

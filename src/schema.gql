@@ -51,7 +51,7 @@ type Todo {
   description: String
   id: Float!
   tag: String
-  title: String
+  title: String!
 }
 
 input UpdateTodoInput {

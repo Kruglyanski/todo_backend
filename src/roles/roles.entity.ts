@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../users/users.model';
-//import { UserRoles } from './user-roles.model';
+import { User } from '../users/users.entity';
 import {
   Column,
   Entity,
@@ -26,11 +25,4 @@ export class Role {
   @ManyToMany(() => User, (user) => user.roles)
   @JoinTable({ name: 'user_role' })
   users: User[];
-  // @ApiProperty({ example: '1', description: 'User Id' })
-  // @Column()
-  // userId: number;
-
-  // @ApiProperty({ example: 'Users', description: 'Role description' })
-  // @ManyToMany(() => User, user => user.roles)
-  // users: User[];
 }

@@ -9,11 +9,11 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Category } from './categories.model';
+import { Category } from './categories.entity';
 import { CategoryService } from './categories.service';
 import { CreateCategoryInput } from './inputs/create-category.input';
 import { AuthService } from '../auth/auth.service';
-import { Todo } from '../todos/todos.model';
+import { Todo } from '../todos/todos.entity';
 import { TodosService } from '../todos/todos.service';
 
 @Resolver(() => Category)

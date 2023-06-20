@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Category } from './categories.model';
+import { Category } from './categories.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../users/users.model';
+import { User } from '../users/users.entity';
 import { CreateCategoryInput } from './inputs/create-category.input';
 
 interface ICreateCategory

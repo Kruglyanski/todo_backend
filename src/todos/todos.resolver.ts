@@ -7,9 +7,9 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { TodosService } from './todos.service';
-import { Todo } from './todos.model';
+import { Todo } from './todos.entity';
 import { CreateTodoInput } from './inputs/create-todo.input';
-import { Category } from '../categories/categories.model';
+import { Category } from '../categories/categories.entity';
 import { UpdateTodoInput } from './inputs/update-todo.input';
 
 @Resolver(() => Todo)

@@ -5,9 +5,10 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Category } from '../categories/categories.model';
+import { Category } from '../categories/categories.entity';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+
 @ObjectType()
 @Entity('todos')
 export class Todo {
@@ -17,9 +18,7 @@ export class Todo {
   id: number;
 
   @ApiProperty({ example: 'Title', description: 'Title' })
-  @Field({
-    nullable: true,
-  })
+  @Field()
   @Column({
     nullable: true,
   })

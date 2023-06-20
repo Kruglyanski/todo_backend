@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 //import { Role } from '../roles/roles.model';
 //import { UserRoles } from '../roles/user-roles.model';
-import { Todo } from '../todos/todos.model';
+import { Todo } from '../todos/todos.entity';
 import {
   Column,
   Entity,
@@ -11,8 +11,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Category } from '../categories/categories.model';
-import { Role } from '../roles/roles.model';
+import { Category } from '../categories/categories.entity';
+import { Role } from '../roles/roles.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 @Entity()

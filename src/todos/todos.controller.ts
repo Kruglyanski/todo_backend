@@ -11,7 +11,7 @@ import {
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Todo } from './todos.model';
+import { Todo } from './todos.entity';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @ApiTags('Todos')

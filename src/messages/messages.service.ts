@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Message } from './messages.model';
+import { Message } from './messages.entity';
 import { SaveMessageDto } from './dto/save-message.dto';
 import { EMessageType } from '../enums/message-type';
 import { UpdateMessageDto } from './dto/update-message.dto';

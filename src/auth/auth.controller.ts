@@ -6,11 +6,13 @@ import { AllowUnauthorized } from './decorators/allow-unautharized';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
   @AllowUnauthorized()
   @Post('/login')
   login(@Body() userDto: CreateUserDto) {
     return this.authService.login(userDto);
   }
+
   @AllowUnauthorized()
   @Post('/registration')
   registration(@Body() userDto: CreateUserDto) {

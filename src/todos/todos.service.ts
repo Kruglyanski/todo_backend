@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { Todo } from './todos.model';
+import { Todo } from './todos.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Category } from '../categories/categories.model';
+import { Category } from '../categories/categories.entity';
 import { CreateTodoInput } from './inputs/create-todo.input';
 
 @Injectable()
@@ -48,8 +48,7 @@ export class TodosService {
 
   async updateTodoFields(id: number, fieldsToUpdate: Partial<Todo>) {
     const updatedTodo: Todo = await this.todosRepository
-      .createQueryBuilder('todos')
-      .leftJoinAndSelect('todos.category', 'category')
+      .createQueryBuilder()
       .update(Todo)
       .set(fieldsToUpdate)
       .where('id = :id', { id })

@@ -1,10 +1,10 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CategoryController } from './categories.controller';
-import { Todo } from '../todos/todos.model';
-import { Category } from './categories.model';
+import { Todo } from '../todos/todos.entity';
+import { Category } from './categories.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/users.model';
+import { User } from '../users/users.entity';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
 import { CategoriesResolver } from './categories.resolver';

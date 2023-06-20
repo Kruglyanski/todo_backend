@@ -1,8 +1,8 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { TodosController } from './todos.controller';
-import { Todo } from './todos.model';
-import { Category } from '../categories/categories.model';
+import { Todo } from './todos.entity';
+import { Category } from '../categories/categories.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryModule } from '../categories/categories.module';
 import { TodosResolver } from './todos.resolver';

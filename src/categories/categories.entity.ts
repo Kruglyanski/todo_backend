@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Todo } from '../todos/todos.model';
+import { Todo } from '../todos/todos.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -12,7 +12,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../users/users.model';
+import { User } from '../users/users.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
