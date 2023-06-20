@@ -19,35 +19,30 @@ export class TodosService {
     const category = await this.categoriesRepository.findOne({
       where: { id: todoDto.categoryId },
     });
-    const todo = await this.todosRepository.save({ ...todoDto, category });
 
-    return todo;
+    return await this.todosRepository.save({ ...todoDto, category });
   }
 
   async getAllTodos() {
-    const todos = await this.todosRepository.find({ relations: ['category'] });
-    return todos;
+    return await this.todosRepository.find({ relations: ['category'] });
   }
 
   async deleteTodo(id: number) {
-    const todo = await this.todosRepository.delete(id);
-    return todo;
+    return await this.todosRepository.delete(id);
   }
 
   async deleteTodosByIds(ids: number[]) {
-    const deletedTodos: Todo[] = await this.todosRepository
+    return await this.todosRepository
       .createQueryBuilder()
       .delete()
       .andWhere('id IN (:...ids)', { ids })
       .returning('*')
       .execute()
       .then((result) => result.raw);
-
-    return deletedTodos;
   }
 
   async updateTodoFields(id: number, fieldsToUpdate: Partial<Todo>) {
-    const updatedTodo: Todo = await this.todosRepository
+    return await this.todosRepository
       .createQueryBuilder()
       .update(Todo)
       .set(fieldsToUpdate)
@@ -55,7 +50,5 @@ export class TodosService {
       .returning('*')
       .execute()
       .then((res) => res.raw[0]);
-
-    return updatedTodo;
   }
 }

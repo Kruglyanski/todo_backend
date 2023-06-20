@@ -39,13 +39,11 @@ export class MessagesService {
           return message;
       }
     };
-    const data = await this.messagesRepository.save({
+    return await this.messagesRepository.save({
       type,
       message: getMessage(),
       userEmail,
     });
-
-    return data;
   }
 
   async getAllMessages() {

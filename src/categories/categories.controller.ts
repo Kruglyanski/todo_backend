@@ -10,7 +10,9 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryService } from './categories.service';
 import { AuthService } from '../auth/auth.service';
-
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Category } from './categories.entity';
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(
@@ -18,6 +20,8 @@ export class CategoryController {
     private authService: AuthService,
   ) {}
 
+  @ApiOperation({ summary: 'Create category' })
+  @ApiResponse({ status: 200, type: () => Category })
   @Post()
   async create(
     @Body() categoryDto: CreateCategoryDto,
@@ -31,15 +35,18 @@ export class CategoryController {
     });
   }
 
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiResponse({ status: 200, type: [Category] })
   @Get()
   async getAll(@Headers('authorization') authHeader: string) {
     const user = await this.authService.getUserFromAuthHeader(authHeader);
     return this.categoryService.getAllCategories(user.id);
   }
 
+  @ApiOperation({ summary: 'Delete category' })
+  @ApiResponse({ status: 200, type: () => Category })
   @Delete('/:categoryId')
   async delete(@Param('categoryId') categoryId: number) {
-    const category = await this.categoryService.deleteCategory(categoryId);
-    return category;
+    return await this.categoryService.deleteCategory(categoryId);
   }
 }

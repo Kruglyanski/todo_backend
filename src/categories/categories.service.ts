@@ -32,22 +32,19 @@ export class CategoryService {
     const user = await this.usersRepository.findOne({
       where: { id: categoryDto.userId },
     });
-    const category = await this.categoriesRepository.save({
+
+    return await this.categoriesRepository.save({
       ...categoryDto,
       todos: [],
       user,
     });
-
-    return category;
   }
 
   async getAllCategories(userId: number) {
-    const categories = await this.categoriesRepository.find({
+    return await this.categoriesRepository.find({
       where: { user: { id: userId } },
       relations: ['todos', 'user'],
     });
-
-    return categories;
   }
 
   async deleteCategory(categoryId: number) {

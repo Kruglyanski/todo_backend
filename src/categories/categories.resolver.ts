@@ -1,8 +1,6 @@
 import {
   Args,
   Context,
-  Float,
-  ID,
   Mutation,
   Parent,
   Query,
@@ -14,7 +12,6 @@ import { CategoryService } from './categories.service';
 import { CreateCategoryInput } from './inputs/create-category.input';
 import { AuthService } from '../auth/auth.service';
 import { Todo } from '../todos/todos.entity';
-import { TodosService } from '../todos/todos.service';
 
 @Resolver(() => Category)
 export class CategoriesResolver {
@@ -32,6 +29,7 @@ export class CategoriesResolver {
     const user = await this.authService.getUserFromAuthHeader(
       context.req.headers.authorization,
     );
+
     return this.categoriesService.getAllCategories(user.id);
   }
 

@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
@@ -19,25 +18,29 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 export class TodosController {
   constructor(private todosService: TodosService) {}
 
-  @Post()
   @ApiOperation({ summary: 'Todo Creating' })
-  @ApiResponse({ status: 200, type: () => [Todo] })
+  @ApiResponse({ status: 200, type: () => Todo })
+  @Post()
   create(@Body() todoDto: CreateTodoDto) {
     return this.todosService.createTodo(todoDto);
   }
 
   @ApiOperation({ summary: 'Get All Todos' })
-  @ApiResponse({ status: 200, type: () => [Todo] })
+  @ApiResponse({ status: 200, type: [Todo] })
   @Get()
   getAll() {
     return this.todosService.getAllTodos();
   }
 
+  @ApiOperation({ summary: 'Delete Todos' })
+  @ApiResponse({ status: 200, type: () => Todo })
   @Delete('/:todoIds')
   delete(@Param('todoIds') todoIds: string) {
     return this.todosService.deleteTodosByIds(todoIds.split(',').map(Number));
   }
 
+  @ApiOperation({ summary: 'Update Todo' })
+  @ApiResponse({ status: 200, type: () => Todo })
   @Patch('update/:todoId')
   update(
     @Param('todoId') todoId: number,

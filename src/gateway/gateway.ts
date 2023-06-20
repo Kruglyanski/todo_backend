@@ -60,6 +60,7 @@ export class Gateway {
 
     const deletedMessage = await this.messageService.delete(msgId);
     client.broadcast.emit('deleteMessage', deletedMessage.id);
+
     return {
       event: 'deleteMessage',
       data: deletedMessage.id,
@@ -79,6 +80,7 @@ export class Gateway {
 
     const { id, message } = await this.messageService.update(msg);
     client.broadcast.emit('editMessage', { id, message });
+
     return {
       event: 'editMessage',
       data: { id, message },

@@ -15,16 +15,18 @@ export class UsersService {
   public async createUser(dto: CreateUserDto | CreateUserInput) {
     const { password, email } = dto;
 
-    const user = await this.usersRepository.save({ password, email });
+    return await this.usersRepository.save({ password, email });
+  }
 
-    return user;
+  public async getAllUsers() {
+    return await this.usersRepository.find({
+      relations: ['categories'],
+    });
   }
 
   public async getUserByEmail(email: string) {
-    const user = this.usersRepository.findOne({
+    return await this.usersRepository.findOne({
       where: { email },
     });
-
-    return user;
   }
 }

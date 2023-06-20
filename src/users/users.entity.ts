@@ -1,19 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-//import { Role } from '../roles/roles.model';
-//import { UserRoles } from '../roles/user-roles.model';
-import { Todo } from '../todos/todos.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Category } from '../categories/categories.entity';
-import { Role } from '../roles/roles.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+
 @ObjectType()
 @Entity()
 export class User {
@@ -32,18 +21,11 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  // @ApiProperty({ example: '1', description: 'Role Id' })
-  // @Column({ nullable: false})
-  // roleId: number;
-
-  // @BelongsToMany(() => Role, () => UserRoles)
-  // roles: Role[];
-
-  @ApiProperty({ example: Category, description: 'Array of categories' })
+  @ApiProperty({
+    example: Category,
+    description: 'Array of categories',
+    type: () => [Category],
+  })
   @OneToMany(() => Category, (category) => category.user)
   categories: Category[];
-
-  @ManyToMany(() => Role, (role) => role.users)
-  @JoinTable({ name: 'user_role' })
-  roles: Role[];
 }
