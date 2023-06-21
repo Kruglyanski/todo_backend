@@ -20,6 +20,7 @@ async function start() {
   const authGuard = app.select(AuthModule).get(JwtAuthGuard);
   app.useGlobalGuards(authGuard);
   app.enableCors();
+
   await app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 }
 
